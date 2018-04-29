@@ -2,8 +2,11 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use src\AppBundle\Entity\Comment;
+use src\AppBundle\Entity\Post;
 
 /**
  * @ORM\Entity
@@ -27,6 +30,24 @@ class User extends BaseUser
      * @ORM\Column(type="string")
      */
     protected $lastName;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="user")
+     * @ORM\OrderBy({"createdAt" = "DESC"})
+     */
+    private $posts;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="user")
+     * @ORM\OrderBy({"createdAt" = "DESC"})
+     */
+    private $comments;
+
+    public function __construct()
+    {
+        $this->posts = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -74,6 +95,22 @@ class User extends BaseUser
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return ArrayCollection|Post[]
+     */
+    public function getPosts()
+    {
+        return $this->posts;
+    }
+
+     /**
+     * @return ArrayCollection|Comment[]
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 
  }
